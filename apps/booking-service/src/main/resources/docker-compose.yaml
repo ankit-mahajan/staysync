@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: staysync-db
+    environment:
+      - POSTGRES_DB=staysync_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      # This maps the internal Postgres data directory to a Docker-managed volume
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d staysync_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  # This tells Docker to create a persistent storage area on your hard drive
+  postgres_data:
